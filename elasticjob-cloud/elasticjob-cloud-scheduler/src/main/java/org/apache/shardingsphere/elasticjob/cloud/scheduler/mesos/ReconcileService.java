@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.mesos.Protos;
 import org.apache.mesos.Protos.TaskStatus;
 import org.apache.mesos.SchedulerDriver;
-import org.apache.shardingsphere.elasticjob.cloud.context.TaskContext;
+import org.apache.shardingsphere.elasticjob.infra.context.TaskContext;
 import org.apache.shardingsphere.elasticjob.cloud.scheduler.env.BootstrapEnvironment;
 import org.apache.shardingsphere.elasticjob.cloud.scheduler.env.FrameworkConfiguration;
 
@@ -95,7 +95,7 @@ public class ReconcileService extends AbstractScheduledService {
     
     @Override
     protected Scheduler scheduler() {
-        FrameworkConfiguration configuration = BootstrapEnvironment.getInstance().getFrameworkConfiguration();
+        FrameworkConfiguration configuration = BootstrapEnvironment.getINSTANCE().getFrameworkConfiguration();
         return Scheduler.newFixedDelaySchedule(configuration.getReconcileIntervalMinutes(), configuration.getReconcileIntervalMinutes(), TimeUnit.MINUTES);
     }
 }

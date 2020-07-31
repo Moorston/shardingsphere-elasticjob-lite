@@ -20,11 +20,9 @@ package org.apache.shardingsphere.elasticjob.cloud.scheduler.statistics;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shardingsphere.elasticjob.cloud.api.JobType;
-import org.apache.shardingsphere.elasticjob.cloud.reg.base.CoordinatorRegistryCenter;
-import org.apache.shardingsphere.elasticjob.cloud.scheduler.config.job.CloudJobConfiguration;
+import org.apache.shardingsphere.elasticjob.cloud.config.CloudJobExecutionType;
+import org.apache.shardingsphere.elasticjob.cloud.config.pojo.CloudJobConfigurationPOJO;
 import org.apache.shardingsphere.elasticjob.cloud.scheduler.config.job.CloudJobConfigurationService;
-import org.apache.shardingsphere.elasticjob.cloud.scheduler.config.job.CloudJobExecutionType;
 import org.apache.shardingsphere.elasticjob.cloud.scheduler.statistics.job.JobRunningStatisticJob;
 import org.apache.shardingsphere.elasticjob.cloud.scheduler.statistics.job.RegisteredJobStatisticJob;
 import org.apache.shardingsphere.elasticjob.cloud.scheduler.statistics.job.TaskResultStatisticJob;
@@ -34,9 +32,9 @@ import org.apache.shardingsphere.elasticjob.cloud.statistics.rdb.StatisticRdbRep
 import org.apache.shardingsphere.elasticjob.cloud.statistics.type.job.JobExecutionTypeStatistics;
 import org.apache.shardingsphere.elasticjob.cloud.statistics.type.job.JobRegisterStatistics;
 import org.apache.shardingsphere.elasticjob.cloud.statistics.type.job.JobRunningStatistics;
-import org.apache.shardingsphere.elasticjob.cloud.statistics.type.job.JobTypeStatistics;
 import org.apache.shardingsphere.elasticjob.cloud.statistics.type.task.TaskResultStatistics;
 import org.apache.shardingsphere.elasticjob.cloud.statistics.type.task.TaskRunningStatistics;
+import org.apache.shardingsphere.elasticjob.reg.base.CoordinatorRegistryCenter;
 import org.apache.shardingsphere.elasticjob.tracing.api.TracingConfiguration;
 
 import javax.sql.DataSource;
@@ -207,27 +205,6 @@ public final class StatisticManager {
     }
     
     /**
-     * Get job type statistics.
-     * 
-     * @return job type statistics
-     */
-    public JobTypeStatistics getJobTypeStatistics() {
-        int scriptJobCnt = 0;
-        int simpleJobCnt = 0;
-        int dataflowJobCnt = 0;
-        for (CloudJobConfiguration each : configurationService.loadAll()) {
-            if (JobType.SCRIPT.equals(each.getTypeConfig().getJobType())) {
-                scriptJobCnt++;
-            } else if (JobType.SIMPLE.equals(each.getTypeConfig().getJobType())) {
-                simpleJobCnt++;
-            } else if (JobType.DATAFLOW.equals(each.getTypeConfig().getJobType())) {
-                dataflowJobCnt++;
-            }
-        }
-        return new JobTypeStatistics(scriptJobCnt, simpleJobCnt, dataflowJobCnt);
-    }
-    
-    /**
      * Get job execution type statistics.
      * 
      * @return Job execution type statistics data object
@@ -235,7 +212,7 @@ public final class StatisticManager {
     public JobExecutionTypeStatistics getJobExecutionTypeStatistics() {
         int transientJobCnt = 0;
         int daemonJobCnt = 0;
-        for (CloudJobConfiguration each : configurationService.loadAll()) {
+        for (CloudJobConfigurationPOJO each : configurationService.loadAll()) {
             if (CloudJobExecutionType.TRANSIENT.equals(each.getJobExecutionType())) {
                 transientJobCnt++;
             } else if (CloudJobExecutionType.DAEMON.equals(each.getJobExecutionType())) {
