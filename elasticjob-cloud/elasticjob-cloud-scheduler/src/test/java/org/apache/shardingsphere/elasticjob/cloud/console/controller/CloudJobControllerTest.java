@@ -87,9 +87,8 @@ public class CloudJobControllerTest extends AbstractCloudControllerTest {
     @Test
     public void assertRegisterWithExistedName() {
         when(getRegCenter().get("/config/app/test_app")).thenReturn(CloudAppJsonConstants.getAppJson("test_app"));
-        when(getRegCenter().isExisted("/config/test_job")).thenReturn(false);
+        when(getRegCenter().get("/config/job/test_job")).thenReturn(null, CloudJsonConstants.getJobJson());
         assertThat(HttpTestUtil.post("http://127.0.0.1:19000/api/job/register", CloudJsonConstants.getJobJson()), is(200));
-        when(getRegCenter().get("/config/job/test_job")).thenReturn(CloudJsonConstants.getJobJson());
         assertThat(HttpTestUtil.post("http://127.0.0.1:19000/api/job/register", CloudJsonConstants.getJobJson()), is(500));
         HttpTestUtil.delete("http://127.0.0.1:19000/api/job/test_job/deregister");
     }
@@ -189,7 +188,10 @@ public class CloudJobControllerTest extends AbstractCloudControllerTest {
     @Test
     public void assertFindJobExecutionEventsWhenNotConfigRDB() {
         ReflectionUtils.setStaticFieldValue(CloudJobController.class, "jobEventRdbSearch", null);
-        assertThat(HttpTestUtil.get("http://127.0.0.1:19000/api/job/events/executions"), is(GsonFactory.getGson().toJson(new JobEventRdbSearch.Result<>(0,
+        Map<String, String> query = new HashMap<>();
+        query.put("per_page", "10");
+        query.put("page", "1");
+        assertThat(HttpTestUtil.get("http://127.0.0.1:19000/api/job/events/executions", query), is(GsonFactory.getGson().toJson(new JobEventRdbSearch.Result<>(0,
                 Collections.<JobExecutionEvent>emptyList()))));
     }
     

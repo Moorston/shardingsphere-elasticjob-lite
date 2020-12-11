@@ -90,11 +90,11 @@ public final class BootstrapEnvironment {
     }
     
     /**
-     * Get zookeeper config.
+     * Get zookeeper configuration.
      *
-     * @return zookeeper config
+     * @return zookeeper configuration
      */
-    // TODO Other zkConfig values ​​are configurable
+    // TODO Other zkConfig values are configurable
     public ZookeeperConfiguration getZookeeperConfiguration() {
         ZookeeperConfiguration result = new ZookeeperConfiguration(getValue(EnvironmentArgument.ZOOKEEPER_SERVERS), getValue(EnvironmentArgument.ZOOKEEPER_NAMESPACE));
         String digest = getValue(EnvironmentArgument.ZOOKEEPER_DIGEST);
@@ -121,13 +121,22 @@ public final class BootstrapEnvironment {
     public FrameworkConfiguration getFrameworkConfiguration() {
         return new FrameworkConfiguration(Integer.parseInt(getValue(EnvironmentArgument.JOB_STATE_QUEUE_SIZE)), Integer.parseInt(getValue(EnvironmentArgument.RECONCILE_INTERVAL_MINUTES)));
     }
+
+    /**
+     * Get user auth config.
+     *
+     * @return the user auth config.
+     */
+    public AuthConfiguration getUserAuthConfiguration() {
+        return new AuthConfiguration(getValue(EnvironmentArgument.AUTH_USERNAME), getValue(EnvironmentArgument.AUTH_PASSWORD));
+    }
     
     /**
      * Get tracing configuration.
      *
      * @return tracing configuration
      */
-    public Optional<TracingConfiguration> getTracingConfiguration() {
+    public Optional<TracingConfiguration<?>> getTracingConfiguration() {
         String driver = getValue(EnvironmentArgument.EVENT_TRACE_RDB_DRIVER);
         String url = getValue(EnvironmentArgument.EVENT_TRACE_RDB_URL);
         String username = getValue(EnvironmentArgument.EVENT_TRACE_RDB_USERNAME);
@@ -213,7 +222,11 @@ public final class BootstrapEnvironment {
 
         EVENT_TRACE_RDB_PASSWORD("event_trace_rdb_password", "", false),
     
-        RECONCILE_INTERVAL_MINUTES("reconcile_interval_minutes", "-1", false);
+        RECONCILE_INTERVAL_MINUTES("reconcile_interval_minutes", "-1", false),
+
+        AUTH_USERNAME("auth_username", "root", true),
+
+        AUTH_PASSWORD("auth_password", "pwd", true);
         
         private final String key;
         

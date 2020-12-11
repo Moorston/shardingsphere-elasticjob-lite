@@ -5,11 +5,11 @@ ElasticJob is a distributed scheduling solution consisting of two separate proje
 
 Through the functions of flexible scheduling, resource management and job management, 
 it creates a distributed scheduling solution suitable for Internet scenarios, 
-and provides diversified job ecosystem through open architecture design.
+and provides a diversified job ecosystem through open architecture design.
 It uses a unified job API for each project.
 Developers only need code one time and can deploy at will.
 
-ElasticJob Lite is a lightweight, decentralized solution that provides distributed task sharding services.
+ElasticJob-Lite is a lightweight, decentralized solution that provides distributed task sharding services.
 
 ElasticJob became an Apache ShardingSphere Sub project on May 28 2020.
 
